@@ -1,0 +1,11 @@
+{% extends 'accounts/main.html' %}
+
+{% block content %}
+
+    <form action="" method="GET">
+        {% csrf_token %}
+        {{form}}
+
+    </form>
+
+{% endblock %}

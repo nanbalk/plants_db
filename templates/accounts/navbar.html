@@ -1,0 +1,22 @@
+{% load static %}
+
+<nav class="navbar-dark bg-dark">
+    <div class="container-fluid">
+        <img src="{% static 'img/logo.jpg' %}">
+            <ul class="nav justify-content-end">
+                <li class="nav-item">
+                <a class="nav-link active" aria-current="page" href="{% url 'home' %}" style="color: rgb(14, 230, 201);">Dashboard</a>
+                </li>
+                <li class="nav-item">
+                <a class="nav-link" href="{% url 'about' %}" style="color: rgb(14, 230, 201);">About Us</a>
+                </li>
+                <li class="nav-item">
+                <a class="nav-link" href="{% url 'contact' %}" style="color: rgb(14, 230, 201);">Contact Us</a>
+                </li>
+                <li class="nav-item">
+                <a class="nav-link" href="{% url 'login' %}" style="color: rgb(14, 230, 201);">Login</a>
+                </li>
+            </ul>
+    </div>
+  </nav>
+  

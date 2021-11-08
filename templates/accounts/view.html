@@ -1,0 +1,40 @@
+{% extends 'accounts/main.html' %}
+
+{% block content %}
+
+<div class="row">
+    <div class="col-md">
+        <div class="card card-body">
+          <a class="btn btn-primary btn-sm btn-block" href="{% url 'create_form' %}">Create New Plant</a>
+            <table class="table table-striped">
+                <thead>
+                  <tr>
+                    <!-- <th scope="col">#</th> -->
+                    <th scope="col">Plant</th>
+                    <th scope="col">Bioactive Compound</th>
+                    <th scope="col">Uses</th>
+                    <th scope="col"></th>
+                    
+                  </tr>
+                </thead>
+            
+                {% for i in view %}
+                    <tr> 
+                        <td>{{i.name}}</td>
+                        <td>{{i.bioactive_compound}}</td>
+                        <td>{{i.uses}}</td>
+                        <td><div class="btn-group" role="group" aria-label="Basic mixed styles example">
+                          <button type="button" class="btn btn-danger">Delete</button>
+                          <a href="{% url 'update_form'%}"><button type="button" class="btn btn-warning">Edit</button></a>
+                          <button type="button" class="btn btn-success">View</button>
+                        </div></td>
+                    </tr>
+                {% endfor %}
+            
+              </table>
+        </div>
+    </div>
+</div>
+
+
+  {% endblock %}

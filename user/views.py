@@ -5,6 +5,7 @@ from .filters import PlantFilter
 
 # Create your views here.
 from .models import *
+from .scrape import *
 
 def home(request):
     myFilter = PlantFilter()
@@ -24,7 +25,7 @@ def login(request):
 def view(request, pk_test):
     view = Plants.objects.all()
     plant = Plants.objects.get(id=pk_test)
-    
+
 
     context = {'view':view, 'plant':plant}
     return render(request, 'accounts/view.html', context)
@@ -33,7 +34,7 @@ def createPlant(request):
 
     form = PlantsForm()
     if request.method == 'POST':
-        form = PlantsForm(request.POST) 
+        form = PlantsForm(request.POST)
         if form.is_valid():
             form.save()
             return redirect('/')
@@ -47,7 +48,7 @@ def updatePlant(request, pk):
     form = PlantsForm(instance=plant)
 
     if request.method == 'POST':
-        form = PlantsForm(request.POST) 
+        form = PlantsForm(request.POST)
         if form.is_valid():
             form.save()
             return redirect('/')
@@ -66,13 +67,57 @@ def deletePlant(request, pk):
     context = {'item':plant}
     return render(request, 'accounts/delete.html', context)
 
+##################################################################################################
+
+def scrapeView(request):
+    term = 'e'
+    links = 'l'
+    if request.method == "POST":
+        term = request.POST["term"]
+
+        # scrape(term)
+        term = urllib.parse.quote_plus(term)
+        response = get_source("https://pubmed.ncbi.nlm.nih.gov/?term=" + term)
+
+        links = response.html.absolute_links
+
+        record = Scrape(name=term,link=links)
+        record.save()
+        context = {'term':term}
+        return render(request, 'accounts/success.html', context)
+    context = {'term':term}
+    return render(request, 'accounts/scrape.html',context)
 
 
-# def retrieve(request):
-#     form = PlantsRetreive()
+import requests
+import urllib
+import pandas as pd
+from requests_html import HTML
+from requests_html import HTMLSession
 
-#     if request.method == 'GET':
-#         form = PlantsRetreive(request.GET)
+def get_source(url):
+    try:
+        session = HTMLSession()
+        response = session.get(url)
+        return response
 
-#     context = {'form':form}
-#     return render(request, 'accounts/retrieve.html', context)
+    except requests.exceptions.RequestException as e:
+        print(e)
+
+# from django.views.generic.list import ListView
+#
+# class Retrieve(ListView):
+
+def retrieve(request):
+    term = ''
+    details = ''
+    if request.method == "POST":
+        term = request.POST["term"]
+
+        details = Scrape.objects.all().filter(name__contains=term)
+
+        context = {'term':term, 'details':details}
+
+        return render(request, 'accounts/details.html', context)
+
+    return render(request, 'accounts/retrieve.html')

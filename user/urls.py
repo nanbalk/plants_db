@@ -1,5 +1,6 @@
 from django.urls import path
 from . import views
+from django.contrib import admin
 
 urlpatterns = [
     path('', views.home, name="home"),
@@ -10,7 +11,8 @@ urlpatterns = [
     path('create_form/', views.createPlant, name="create_form"),
     path('update_form/<str:pk>/', views.updatePlant, name="update_form"),
     path('delete_form/<str:pk>/', views.deletePlant, name="delete_form"),
+    path('scrape/', views.scrapeView, name='scrape'),
+    path('admin/', admin.site.urls, name='admin'),
+    path('retrieve/', views.retrieve, name='retrieve'),
+
 ]
-
-
-

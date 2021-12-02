@@ -1,27 +1,46 @@
 {% load static %}
 
 <nav class="navbar-dark bg-dark">
-    <div class="container-fluid">
-        <img src="{% static 'img/logo.jpg' %}">
-            <ul class="nav justify-content-end">
-                <li class="nav-item">
-                <a class="nav-link active" aria-current="page" href="{% url 'home' %}" style="color: rgb(14, 230, 201);">Dashboard</a>
-                </li>
-                <li class="nav-item">
-                <a class="nav-link" href="{% url 'about' %}" style="color: rgb(14, 230, 201);">About Us</a>
-                </li>
-                <li class="nav-item">
-                <a class="nav-link" href="{% url 'contact' %}" style="color: rgb(14, 230, 201);">Contact Us</a>
-                </li>
-                <li class="nav-item">
-                <a class="nav-link" href="/admin" style="color: rgb(14, 230, 201);">Login</a>
-                </li>
-                <li class="nav-item">
-                <a class="nav-link" href="{% url 'scrape' %}" style="color: rgb(14, 230, 201);">Scrape</a>
-                </li>
-                <li class="nav-item">
-                <a class="nav-link" href="{% url 'retrieve' %}" style="color: rgb(14, 230, 201);">Retrieve</a>
-                </li>
-            </ul>
-    </div>
-  </nav>
+  <div class="container-fluid">
+    <a href="{% url 'home' %}"><img src="{% static 'img/logo.jpg' %}"></a>
+
+    <ul class="nav justify-content-end">
+
+      {% if user.is_authenticated %}
+      
+      <li class="nav-item">
+        <a class="nav-link" href="{% url 'scrape' %}" style="color: rgb(14, 230, 201);">Scrape</a>
+      </li>
+      <li class="nav-item">
+        <a class="nav-link" href="{% url 'retrieve' %}" style="color: rgb(14, 230, 201);">Retrieve</a>
+      </li>
+
+      <li class="nav-item">
+        <a class="nav-link" href="{% url 'logout' %}" class="btn btn-simple">Log out</a>
+      </li>
+
+
+      {% else %}
+
+      <!-- <li class="nav-item">
+        <a class="nav-link active" aria-current="page" href="{% url 'home' %}" style="color: rgb(14, 230, 201);">Dashboard</a>
+      </li> -->
+      <li class="nav-item">
+        <a class="nav-link" href="{% url 'login' %}" class="btn btn-simple">Log in</a>
+      </li>
+      <li class="nav-item">
+        <a class="nav-link" href="{% url 'signup' %}" class="btn btn-simple">Sign up</a>
+      </li>
+
+      {% endif %}
+
+      <li class="nav-item">
+        <a class="nav-link" href="{% url 'about' %}" style="color: rgb(14, 230, 201);">About Us</a>
+      </li>
+      <li class="nav-item">
+        <a class="nav-link" href="{% url 'contact' %}" style="color: rgb(14, 230, 201);">Contact Us</a>
+      </li>
+
+    </ul>
+  </div>
+</nav>

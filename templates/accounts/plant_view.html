@@ -1,0 +1,16 @@
+{% extends 'accounts/main.html' %}
+
+{% block content %}
+
+{% include 'accounts/style.html' %}
+
+  <div class="jumbotron">
+    <h3>Plant: {{ search_term }}</h3>
+    <ul>
+      <li>Bioactive Compound: {{ plant_view.bioactive_compound }}</li>
+      <li>Uses: {{ plant_view.uses }}</li>
+    </ul>
+
+  </div>
+
+ {% endblock %}

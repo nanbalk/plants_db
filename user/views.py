@@ -1,4 +1,10 @@
 from django.shortcuts import render, redirect
+from django.contrib.auth.decorators import login_required
+from django.contrib.auth.models import User
+from django.contrib.auth.forms import UserCreationForm
+from django.views.generic import TemplateView
+from django.contrib.auth.mixins import LoginRequiredMixin
+
 from django.http import HttpResponse
 from .forms import PlantsForm
 from .filters import PlantFilter
@@ -8,10 +14,22 @@ from .models import *
 from .scrape import *
 
 def home(request):
-    myFilter = PlantFilter()
+    if request.method == "POST":
+        try:
+            search_term = request.POST.get("search")
+            plant_view = Plants.objects.get(name=search_term)
+        except Exception as e:
+            raise e
 
-    context = {'myFilter':myFilter}
-    return render(request, 'accounts/dashboard.html', context)
+        context = {'search_term':search_term, 'plant_view':plant_view}
+
+        return render(request, 'accounts/plant_view.html', context)
+
+    # myFilter = PlantFilter()
+    #
+    # context = {'myFilter':myFilter}
+    return render(request, 'accounts/dashboard.html')
+
 
 def contact(request):
     return render(request, 'accounts/contact_us.html')
@@ -19,17 +37,16 @@ def contact(request):
 def about(request):
     return render(request, 'accounts/about_us.html')
 
-def login(request):
-    return render(request, 'accounts/login.html')
 
-def view(request, pk_test):
+
+def view(request,pk_test):
     view = Plants.objects.all()
     plant = Plants.objects.get(id=pk_test)
 
 
     context = {'view':view, 'plant':plant}
     return render(request, 'accounts/view.html', context)
-
+@login_required
 def createPlant(request):
 
     form = PlantsForm()
@@ -42,7 +59,7 @@ def createPlant(request):
     context = {'form':form}
     return render(request, 'accounts/plant_form.html', context)
 
-
+@login_required
 def updatePlant(request, pk):
     plant = Plants.objects.get(id=pk)
     form = PlantsForm(instance=plant)
@@ -56,7 +73,7 @@ def updatePlant(request, pk):
     context = {'form' : form}
     return render(request, 'accounts/plant_form.html', context)
 
-
+@login_required
 def deletePlant(request, pk):
     plant = Plants.objects.get(id=pk)
 
@@ -68,7 +85,7 @@ def deletePlant(request, pk):
     return render(request, 'accounts/delete.html', context)
 
 ##################################################################################################
-
+@login_required
 def scrapeView(request):
     term = 'e'
     links = 'l'
@@ -107,17 +124,33 @@ def get_source(url):
 # from django.views.generic.list import ListView
 #
 # class Retrieve(ListView):
-
+@login_required
 def retrieve(request):
     term = ''
     details = ''
     if request.method == "POST":
-        term = request.POST["term"]
+        term = request.POST.get("term")
 
-        details = Scrape.objects.all().filter(name__contains=term)
+        details = Scrape.objects.get(name=term)
 
         context = {'term':term, 'details':details}
 
         return render(request, 'accounts/details.html', context)
 
     return render(request, 'accounts/retrieve.html')
+
+
+####################################################################################################################
+
+
+def signup(request):
+    if request.method == 'POST':
+        form = UserCreationForm(request.POST)
+        if form.is_valid():
+            form.save()
+            return redirect('login')
+    else:
+        form = UserCreationForm()
+    return render(request, 'registration/signup.html', {
+        'form': form
+    })
